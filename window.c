@@ -62,13 +62,12 @@ int main()
 	gtk_grid_attach (GTK_GRID (grid), cb_yes, 2, 8, 1, 1);
 	gtk_grid_attach (GTK_GRID (grid), label1, 1, 9, 1, 1);
 	gtk_grid_attach_next_to (GTK_GRID (grid), textview, label1, GTK_POS_RIGHT, 1, 1);
-
-
+	
 	// GTK HEADER BAR
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
 	gtk_window_set_titlebar(GTK_WINDOW(window), header_bar);
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), "Incremental Backup GUI");
-	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(header_bar), "a|a|C|C|G");
+	//gtk_header_bar_set_subtitle(GTK_HEADER_BAR(header_bar), "a|a|C|C|G");
 
 	//GTK WINDOW
 	gtk_window_set_default_size((GTK_WINDOW(window)), 800, 800);
@@ -78,7 +77,6 @@ int main()
 
 
 	gtk_container_add (GTK_CONTAINER (window), grid);
-	gtk_container_add(GTK_CONTAINER(window), textview);
 
 	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
