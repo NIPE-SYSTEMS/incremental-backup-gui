@@ -24,6 +24,7 @@ GtkWidget *label_path;
 GtkWidget *label_algorithm;
 GtkWidget *label_source;
 GtkWidget *label_index;
+GtkWidget *label2;
 GtkWidget *spinner;
 
 GtkWidget *scrolled_window;
@@ -62,6 +63,7 @@ int main()
 	cb_verbose = gtk_check_button_new_with_label ("Verbose output");
 	cb_yes = gtk_check_button_new_with_label ("Answer all questions with yes (script-friendly)"); 
 	label1 = gtk_label_new("Command: ");
+	label2 = gtk_label_new("'-v' = verbose (REQUIRED)");
 	label_path = gtk_label_new("Path to generated archive file:");
 	label_algorithm = gtk_label_new("Compression algorithm:");
 	label_source = gtk_label_new("Path to the directory which should be stored in backup:");
@@ -110,7 +112,8 @@ int main()
 	gtk_box_pack_start(GTK_BOX(horizontal8), cb_yes, TRUE, FALSE,0);
 	gtk_box_pack_start(GTK_BOX(horizontal9), label1, TRUE, TRUE,0);
 	gtk_box_pack_start(GTK_BOX(horizontal9), textview, TRUE, TRUE,30);
-	gtk_box_pack_start(GTK_BOX(horizontal10), spinner, TRUE, TRUE,0);
+	gtk_box_pack_start(GTK_BOX(horizontal10), label2, TRUE, TRUE,30);
+	gtk_box_pack_start(GTK_BOX(horizontal11), spinner, TRUE, TRUE,0);
 
 	// GTK GRID
 	//~ gtk_grid_attach (GTK_GRID (grid), button_path, 2, 0, 1, 1);
@@ -134,7 +137,7 @@ int main()
 	gtk_window_set_default_size((GTK_WINDOW(window)), 800, 800);
 
 	//GTK TEXT VIEW
-	gtk_text_buffer_set_text(textbuffer, "a|C|a|C|a|a|a|C|C|G|", -1);
+	gtk_text_buffer_set_text(textbuffer, "-v ", -1);
 
 
 	//~ gtk_container_add (GTK_CONTAINER (window), grid);
@@ -150,6 +153,7 @@ int main()
 	gtk_container_add (GTK_CONTAINER (vertical), horizontal8);
 	gtk_container_add (GTK_CONTAINER (vertical), horizontal9);
 	gtk_container_add (GTK_CONTAINER (vertical), horizontal10);
+	gtk_container_add (GTK_CONTAINER (vertical), horizontal11);
 
 	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
