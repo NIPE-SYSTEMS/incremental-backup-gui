@@ -1,4 +1,6 @@
 #define UNUSED(x) (void)(x)
+#define COMMAND_LEN 6
+#define DATA_SIZE 512
 
 #include <gtk/gtk.h>
 #include <stdlib.h>
@@ -17,7 +19,6 @@ GtkTextBuffer *textbuffer;
 GtkWidget *cb_algorithm;
 GtkWidget *cb_skip_hidden;
 GtkWidget *cb_full;
-GtkWidget *cb_verbose;
 GtkWidget *cb_yes;
 GtkWidget *label1;
 GtkWidget *label_path;
@@ -26,6 +27,9 @@ GtkWidget *label_source;
 GtkWidget *label_index;
 GtkWidget *label2;
 GtkWidget *spinner;
+GtkWidget *startba;
+GtkSizeGroup *sizegroup1;
+GtkSizeGroup *sizegroup2;
 
 GtkWidget *scrolled_window;
 GtkWidget *vertical;
@@ -42,9 +46,19 @@ GtkWidget *horizontal10;
 GtkWidget *horizontal11;
 GtkWidget *horizontal12;
 
+FILE *pf;
+char command[COMMAND_LEN];
+char data[DATA_SIZE];
+
 int main()
 {
 	gtk_init (NULL, NULL);
+	
+	sprintf(command, "~/incremental-backup/bin/backup --help");
+	pf = popen(command,"r");
+
+    fgets(data, DATA_SIZE , pf);
+    fprintf(stdout, "-%s-\n",data);
 	
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	//~ grid = gtk_grid_new ();
@@ -60,15 +74,17 @@ int main()
 	cb_algorithm = gtk_combo_box_text_new ();
 	cb_skip_hidden = gtk_check_button_new_with_label ("Skip hidden files. (leading '.' in file name)");
 	cb_full = gtk_check_button_new_with_label ("Ignore index file and make a full backup");
-	cb_verbose = gtk_check_button_new_with_label ("Verbose output");
 	cb_yes = gtk_check_button_new_with_label ("Answer all questions with yes (script-friendly)"); 
 	label1 = gtk_label_new("Command: ");
 	label2 = gtk_label_new("'-v' = verbose (REQUIRED)");
 	label_path = gtk_label_new("Path to generated archive file:");
 	label_algorithm = gtk_label_new("Compression algorithm:");
-	label_source = gtk_label_new("Path to the directory which should be stored in backup:");
+	label_source = gtk_label_new("Path to the directory which should be backupeds:");
 	label_index = gtk_label_new("Path to the index directory:");
 	spinner = gtk_spinner_new();
+	startba = gtk_button_new_with_label("Backup!");
+	sizegroup1 = gtk_size_group_new(GTK_SIZE_GROUP_VERTICAL);
+	sizegroup2 = gtk_size_group_new(GTK_SIZE_GROUP_VERTICAL);
 	
 	scrolled_window = gtk_scrolled_window_new(NULL,NULL);
 	vertical = gtk_box_new (GTK_ORIENTATION_VERTICAL, 15);
@@ -84,6 +100,16 @@ int main()
 	horizontal10 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	horizontal11 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	horizontal12 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+
+	// GTK SIZE GROUP
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), button_path);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), cb_algorithm);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), button_index);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), button_source);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), cb_skip_hidden);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), cb_full);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), cb_yes);
+
 	
 	// GTK COMBO BOX
 	gtk_combo_box_text_insert(GTK_COMBO_BOX_TEXT(cb_algorithm), 0, "id1", "b64encode");
@@ -98,6 +124,7 @@ int main()
 	gtk_combo_box_text_insert(GTK_COMBO_BOX_TEXT(cb_algorithm), 9, "id10", "xz");
 	gtk_combo_box_set_active(GTK_COMBO_BOX(cb_algorithm), 4);
 	
+	// GTK BOX
 	gtk_box_pack_start(GTK_BOX(horizontal1), label_path, TRUE, TRUE,0);
 	gtk_box_pack_start(GTK_BOX(horizontal1), button_path, TRUE, TRUE,30);
 	gtk_box_pack_start(GTK_BOX(horizontal2), label_algorithm, TRUE, TRUE,0);
@@ -108,12 +135,12 @@ int main()
 	gtk_box_pack_start(GTK_BOX(horizontal4), button_source, TRUE, TRUE,30);
 	gtk_box_pack_start(GTK_BOX(horizontal5), cb_skip_hidden, TRUE, FALSE,0);
 	gtk_box_pack_start(GTK_BOX(horizontal6), cb_full, TRUE, FALSE,0);
-	gtk_box_pack_start(GTK_BOX(horizontal7), cb_verbose, TRUE, FALSE,0);
-	gtk_box_pack_start(GTK_BOX(horizontal8), cb_yes, TRUE, FALSE,0);
-	gtk_box_pack_start(GTK_BOX(horizontal9), label1, TRUE, TRUE,0);
-	gtk_box_pack_start(GTK_BOX(horizontal9), textview, TRUE, TRUE,30);
-	gtk_box_pack_start(GTK_BOX(horizontal10), label2, TRUE, TRUE,30);
-	gtk_box_pack_start(GTK_BOX(horizontal11), spinner, TRUE, TRUE,0);
+	gtk_box_pack_start(GTK_BOX(horizontal7), cb_yes, TRUE, FALSE,0);
+	gtk_box_pack_start(GTK_BOX(horizontal8), label1, TRUE, TRUE,0);
+	gtk_box_pack_start(GTK_BOX(horizontal8), textview, TRUE, TRUE,30);
+	gtk_box_pack_start(GTK_BOX(horizontal8), startba, TRUE, TRUE,30);
+	gtk_box_pack_start(GTK_BOX(horizontal9), label2, TRUE, TRUE,30);
+	gtk_box_pack_start(GTK_BOX(horizontal10), spinner, TRUE, TRUE,0);
 
 	// GTK GRID
 	//~ gtk_grid_attach (GTK_GRID (grid), button_path, 2, 0, 1, 1);
@@ -154,6 +181,8 @@ int main()
 	gtk_container_add (GTK_CONTAINER (vertical), horizontal9);
 	gtk_container_add (GTK_CONTAINER (vertical), horizontal10);
 	gtk_container_add (GTK_CONTAINER (vertical), horizontal11);
+	
+	gtk_container_set_border_width(GTK_CONTAINER(vertical),15);
 
 	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
