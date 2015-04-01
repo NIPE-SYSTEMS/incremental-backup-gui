@@ -30,6 +30,7 @@ GtkWidget *spinner;
 GtkWidget *startba;
 GtkSizeGroup *sizegroup1;
 GtkSizeGroup *sizegroup2;
+GtkSizeGroup *sizegroup3;
 
 GtkWidget *scrolled_window;
 GtkWidget *vertical;
@@ -83,8 +84,9 @@ int main()
 	label_index = gtk_label_new("Path to the index directory:");
 	spinner = gtk_spinner_new();
 	startba = gtk_button_new_with_label("Backup!");
-	sizegroup1 = gtk_size_group_new(GTK_SIZE_GROUP_VERTICAL);
-	sizegroup2 = gtk_size_group_new(GTK_SIZE_GROUP_VERTICAL);
+	sizegroup1 = gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
+	sizegroup2 = gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
+	sizegroup3 = gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
 	
 	scrolled_window = gtk_scrolled_window_new(NULL,NULL);
 	vertical = gtk_box_new (GTK_ORIENTATION_VERTICAL, 15);
@@ -102,13 +104,22 @@ int main()
 	horizontal12 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 
 	// GTK SIZE GROUP
-	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), button_path);
-	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), cb_algorithm);
-	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), button_index);
-	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), button_source);
-	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), cb_skip_hidden);
-	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), cb_full);
-	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), cb_yes);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label_path);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label_algorithm);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label_index);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label_source);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label1);
+
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup2), cb_skip_hidden);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup2), cb_full);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup2), cb_yes);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup2), label2);
+
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup3), button_path);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup3), cb_algorithm);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup3), button_index);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup3), button_source);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup3), startba);
 
 	
 	// GTK COMBO BOX
