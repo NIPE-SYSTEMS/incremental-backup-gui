@@ -60,6 +60,8 @@ int main()
 
     fgets(data, DATA_SIZE , pf);
     fprintf(stdout, "%s\n",data);
+
+    pclose(pf);
 	
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	//~ grid = gtk_grid_new ();
