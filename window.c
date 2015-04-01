@@ -1,6 +1,6 @@
 #define UNUSED(x) (void)(x)
-#define COMMAND_LEN 6
-#define DATA_SIZE 512
+#define COMMAND_LEN 50
+#define DATA_SIZE 100000
 
 #include <gtk/gtk.h>
 #include <stdlib.h>
@@ -55,11 +55,11 @@ int main()
 {
 	gtk_init (NULL, NULL);
 	
-	sprintf(command, "~/incremental-backup/bin/backup --help");
-	pf = popen(command,"r");
+	sprintf(command, "~/incremental-backup/bin/incremental-backup --help");
+	pf = popen(command,"w");
 
     fgets(data, DATA_SIZE , pf);
-    fprintf(stdout, "-%s-\n",data);
+    fprintf(stdout, "%s\n",data);
 	
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	//~ grid = gtk_grid_new ();
