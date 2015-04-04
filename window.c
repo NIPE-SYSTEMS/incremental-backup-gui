@@ -8,7 +8,6 @@
 #include <glib.h>
 
 GtkWidget *window;
-//~ GtkWidget *grid;
 GtkWidget *button_path;
 GtkWidget *button_source;
 GtkWidget *button_index;
@@ -61,7 +60,7 @@ int main()
 	gtk_init (NULL, NULL);
 
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	//~ grid = gtk_grid_new ();
+	
 	button_path = gtk_file_chooser_button_new ("Select a directory", GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 	button_source = gtk_file_chooser_button_new ("Select a directory", GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 	button_index = gtk_file_chooser_button_new ("Select a directory", GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
@@ -151,18 +150,6 @@ int main()
 	gtk_box_pack_start(GTK_BOX(horizontal8), startba, TRUE, TRUE,30);
 	gtk_box_pack_start(GTK_BOX(horizontal9), label2, TRUE, TRUE,30);
 	gtk_box_pack_start(GTK_BOX(horizontal10), spinner, TRUE, TRUE,0);
-
-	// GTK GRID
-	//~ gtk_grid_attach (GTK_GRID (grid), button_path, 2, 0, 1, 1);
-	//~ gtk_grid_attach (GTK_GRID (grid), cb_algorithm, 2, 1, 1, 1);
-	//~ gtk_grid_attach (GTK_GRID (grid), button_source, 2, 3, 1, 1);
-	//~ gtk_grid_attach (GTK_GRID (grid), cb_skip_hidden, 2, 5, 1, 1);
-	//~ gtk_grid_attach (GTK_GRID (grid), cb_full, 2, 6, 1, 1);
-	//~ gtk_grid_attach (GTK_GRID (grid), cb_verbose, 2, 7, 1, 1);
-	//~ gtk_grid_attach (GTK_GRID (grid), cb_yes, 2, 8, 1, 1);
-	//~ gtk_grid_attach (GTK_GRID (grid), label1, 1, 9, 1, 1);
-	//~ gtk_grid_attach_next_to (GTK_GRID (grid), textview, label1, GTK_POS_RIGHT, 1, 1);
-	//~ gtk_grid_attach (GTK_GRID (grid), spinner, 2, 10, 1, 1);
 	
 	//sprintf(command_version, "~/incremental-backup/bin/incremental-backup -V");
 	//version = popen(command_version, "w");
@@ -183,7 +170,6 @@ int main()
 	//GTK TEXT VIEW
 	gtk_text_buffer_set_text(textbuffer, "", -1);
 
-	//~ gtk_container_add (GTK_CONTAINER (window), grid);
 	gtk_container_add (GTK_CONTAINER (window), scrolled_window);
 	gtk_container_add (GTK_CONTAINER (scrolled_window), vertical);
 	gtk_container_add (GTK_CONTAINER (vertical), horizontal1);
