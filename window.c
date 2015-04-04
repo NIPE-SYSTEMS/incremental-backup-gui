@@ -1,12 +1,11 @@
 #define UNUSED(x) (void)(x)
 #define COMMAND_LEN 50
-#define DATA_SIZE 100000
+#define DATA_SIZE 512
 
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <glib.h>
-#include <glib/gi18n.h>
 
 GtkWidget *window;
 //~ GtkWidget *grid;
@@ -31,6 +30,8 @@ GtkWidget *startba;
 GtkSizeGroup *sizegroup1;
 GtkSizeGroup *sizegroup2;
 GtkSizeGroup *sizegroup3;
+GtkTextIter start_sel, end_sel;
+gchar *text;
 
 GtkWidget *scrolled_window;
 GtkWidget *vertical;
@@ -51,23 +52,19 @@ FILE *pf;
 char command[COMMAND_LEN];
 char data[DATA_SIZE];
 
+//FILE *version;
+//char command_version[COMMAND_LEN];
+//char data_version[DATA_SIZE];
+
 int main()
 {
 	gtk_init (NULL, NULL);
-	
-	sprintf(command, "~/incremental-backup/bin/incremental-backup --help");
-	pf = popen(command,"w");
 
-    fgets(data, DATA_SIZE , pf);
-    fprintf(stdout, "%s\n",data);
-
-    pclose(pf);
-	
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	//~ grid = gtk_grid_new ();
-	button_path = gtk_file_chooser_button_new (_("Select a directory"), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
-	button_source = gtk_file_chooser_button_new (_("Select a directory"), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
-	button_index = gtk_file_chooser_button_new (_("Select a directory"), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+	button_path = gtk_file_chooser_button_new ("Select a directory", GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+	button_source = gtk_file_chooser_button_new ("Select a directory", GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+	button_index = gtk_file_chooser_button_new ("Select a directory", GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 	gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (button_path), "/home/");
 	gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (button_source), "/");
 	gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (button_source), "/home/");
@@ -167,18 +164,24 @@ int main()
 	//~ gtk_grid_attach_next_to (GTK_GRID (grid), textview, label1, GTK_POS_RIGHT, 1, 1);
 	//~ gtk_grid_attach (GTK_GRID (grid), spinner, 2, 10, 1, 1);
 	
+	//sprintf(command_version, "~/incremental-backup/bin/incremental-backup -V");
+	//version = popen(command_version, "w");
+	//fgets(data_version, DATA_SIZE, version);
+	//fprintf(stdout, "%s\n", version);
+	//pclose(version);
+
 	// GTK HEADER BAR
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
 	gtk_window_set_titlebar(GTK_WINDOW(window), header_bar);
 	gtk_header_bar_set_title(GTK_HEADER_BAR(header_bar), "Incremental Backup GUI");
 	gtk_header_bar_set_subtitle(GTK_HEADER_BAR(header_bar), "a|a|C|C|G");
+	//gtk_header_bar_set_subtitle(GTK_HEADER_BAR(header_bar), version);
 
 	//GTK WINDOW
 	gtk_window_set_default_size((GTK_WINDOW(window)), 800, 800);
 
 	//GTK TEXT VIEW
-	gtk_text_buffer_set_text(textbuffer, "-v ", -1);
-
+	gtk_text_buffer_set_text(textbuffer, "", -1);
 
 	//~ gtk_container_add (GTK_CONTAINER (window), grid);
 	gtk_container_add (GTK_CONTAINER (window), scrolled_window);
@@ -199,8 +202,15 @@ int main()
 
 	g_signal_connect (window, "destroy", G_CALLBACK (gtk_main_quit), NULL);
 
+	// POPEN
+	sprintf(command, "~/incremental-backup/bin/incremental-backup --help");
+	pf = popen(command,"w");
+    fgets(data, DATA_SIZE , pf);
+    fprintf(stdout, "%s\n",data);
+	pclose(pf);
+
 	gtk_widget_show_all(window);
 	gtk_main();
-	
+
 	return 0;
 }
