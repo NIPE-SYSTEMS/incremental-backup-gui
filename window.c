@@ -18,6 +18,7 @@ GtkWidget *cb_algorithm;
 GtkWidget *cb_skip_hidden;
 GtkWidget *cb_full;
 GtkWidget *cb_yes;
+GtkWidget *cb_stats;
 GtkWidget *label1;
 GtkWidget *label_path;
 GtkWidget *label_algorithm;
@@ -74,6 +75,7 @@ int main()
 	cb_skip_hidden = gtk_check_button_new_with_label ("Skip hidden files. (leading '.' in file name)");
 	cb_full = gtk_check_button_new_with_label ("Ignore index file and make a full backup");
 	cb_yes = gtk_check_button_new_with_label ("Answer all questions with yes (script-friendly)"); 
+	cb_stats = gtk_check_button_new_with_label ("Show stats at the end");
 	label1 = gtk_label_new("Command: ");
 	label2 = gtk_label_new("'-v' = verbose (REQUIRED)");
 	label_path = gtk_label_new("Path to generated archive file:");
@@ -111,6 +113,7 @@ int main()
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup2), cb_skip_hidden);
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup2), cb_full);
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup2), cb_yes);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup2), cb_stats);
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup2), label2);
 
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup3), button_path);
@@ -145,11 +148,12 @@ int main()
 	gtk_box_pack_start(GTK_BOX(horizontal5), cb_skip_hidden, TRUE, FALSE,0);
 	gtk_box_pack_start(GTK_BOX(horizontal6), cb_full, TRUE, FALSE,0);
 	gtk_box_pack_start(GTK_BOX(horizontal7), cb_yes, TRUE, FALSE,0);
-	gtk_box_pack_start(GTK_BOX(horizontal8), label1, TRUE, TRUE,0);
-	gtk_box_pack_start(GTK_BOX(horizontal8), textview, TRUE, TRUE,30);
-	gtk_box_pack_start(GTK_BOX(horizontal8), startba, TRUE, TRUE,30);
-	gtk_box_pack_start(GTK_BOX(horizontal9), label2, TRUE, TRUE,30);
-	gtk_box_pack_start(GTK_BOX(horizontal10), spinner, TRUE, TRUE,0);
+	gtk_box_pack_start(GTK_BOX(horizontal8), cb_stats, TRUE, FALSE,0);
+	gtk_box_pack_start(GTK_BOX(horizontal9), label1, TRUE, TRUE,0);
+	gtk_box_pack_start(GTK_BOX(horizontal9), textview, TRUE, TRUE,30);
+	gtk_box_pack_start(GTK_BOX(horizontal9), startba, TRUE, TRUE,30);
+	gtk_box_pack_start(GTK_BOX(horizontal10), label2, TRUE, TRUE,30);
+	gtk_box_pack_start(GTK_BOX(horizontal11), spinner, TRUE, TRUE,0);
 	
 	//sprintf(command_version, "~/incremental-backup/bin/incremental-backup -V");
 	//version = popen(command_version, "w");
