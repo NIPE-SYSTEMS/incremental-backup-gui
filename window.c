@@ -12,8 +12,7 @@ GtkWidget *button_path;
 GtkWidget *button_source;
 GtkWidget *button_index;
 GtkWidget *header_bar;
-GtkWidget *textview;
-GtkTextBuffer *textbuffer;
+GtkWidget *command_entry;
 GtkWidget *cb_algorithm;
 GtkWidget *cb_skip_hidden;
 GtkWidget *cb_full;
@@ -69,8 +68,7 @@ int main()
 	gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (button_source), "/");
 	gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (button_source), "/home/");
 	header_bar = gtk_header_bar_new ();
-	textview = gtk_text_view_new ();
-	textbuffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textview));
+	command_entry = gtk_entry_new();
 	cb_algorithm = gtk_combo_box_text_new ();
 	cb_skip_hidden = gtk_check_button_new_with_label ("Skip hidden files. (leading '.' in file name)");
 	cb_full = gtk_check_button_new_with_label ("Ignore index file and make a full backup");
@@ -111,7 +109,7 @@ int main()
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label_index);
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label_source);
 	//gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label1);
-	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), textview);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), command_entry);
 
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup2), cb_skip_hidden);
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup2), cb_full);
@@ -155,7 +153,7 @@ int main()
 	gtk_box_pack_start(GTK_BOX(horizontal9), cb_stats, TRUE, FALSE,0);
 	gtk_box_pack_start(GTK_BOX(horizontal10), space, TRUE, FALSE,0);
 	//gtk_box_pack_start(GTK_BOX(horizontal9), label1, TRUE, TRUE,0);
-	gtk_box_pack_start(GTK_BOX(horizontal11), textview, TRUE, TRUE,30);
+	gtk_box_pack_start(GTK_BOX(horizontal11), command_entry, TRUE, TRUE,30);
 	gtk_box_pack_start(GTK_BOX(horizontal11), startba, TRUE, TRUE,30);
 	gtk_box_pack_start(GTK_BOX(horizontal12), label2, TRUE, TRUE,30);
 	gtk_box_pack_start(GTK_BOX(horizontal13), spinner, TRUE, TRUE,0);
@@ -176,10 +174,8 @@ int main()
 	//GTK WINDOW
 	gtk_window_set_default_size((GTK_WINDOW(window)), 800, 800);
 
-	//GTK TEXT VIEW
-	gtk_text_buffer_set_text(textbuffer, "", -1);
-	gtk_text_view_set_pixels_above_lines(GTK_TEXT_VIEW(textview), 0);
-	gtk_text_view_set_pixels_below_lines(GTK_TEXT_VIEW(textview), 0);
+	//GTK ENTRY
+	gtk_entry_set_placeholder_text(GTK_ENTRY(command_entry), "Command");
 
 	// GTK LABEL
 	gtk_widget_set_halign(label_path, GTK_ALIGN_START);
