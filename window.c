@@ -19,7 +19,7 @@ GtkWidget *cb_skip_hidden;
 GtkWidget *cb_full;
 GtkWidget *cb_yes;
 GtkWidget *cb_stats;
-GtkWidget *label1;
+//GtkWidget *label1;
 GtkWidget *label_path;
 GtkWidget *label_algorithm;
 GtkWidget *label_source;
@@ -30,8 +30,7 @@ GtkWidget *startba;
 GtkSizeGroup *sizegroup1;
 GtkSizeGroup *sizegroup2;
 GtkSizeGroup *sizegroup3;
-GtkTextIter start_sel, end_sel;
-gchar *text;
+GtkWidget *space;
 
 GtkWidget *scrolled_window;
 GtkWidget *vertical;
@@ -47,14 +46,15 @@ GtkWidget *horizontal9;
 GtkWidget *horizontal10;
 GtkWidget *horizontal11;
 GtkWidget *horizontal12;
+GtkWidget *horizontal13;
 
 FILE *pf;
 char command[COMMAND_LEN];
 char data[DATA_SIZE];
 
-//FILE *version;
-//char command_version[COMMAND_LEN];
-//char data_version[DATA_SIZE];
+FILE *version;
+char command_version[COMMAND_LEN];
+char data_version[DATA_SIZE];
 
 int main()
 {
@@ -76,12 +76,13 @@ int main()
 	cb_full = gtk_check_button_new_with_label ("Ignore index file and make a full backup");
 	cb_yes = gtk_check_button_new_with_label ("Answer all questions with yes (script-friendly)"); 
 	cb_stats = gtk_check_button_new_with_label ("Show stats at the end");
-	label1 = gtk_label_new("Command: ");
+	//label1 = gtk_label_new("Command: ");
 	label2 = gtk_label_new("'-v' = verbose (REQUIRED)");
 	label_path = gtk_label_new("Path to generated archive file:");
 	label_algorithm = gtk_label_new("Compression algorithm:");
 	label_source = gtk_label_new("Path to the directory which should be backupeds:");
 	label_index = gtk_label_new("Path to the index directory:");
+	space = gtk_label_new("");
 	spinner = gtk_spinner_new();
 	startba = gtk_button_new_with_label("Backup!");
 	sizegroup1 = gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
@@ -102,13 +103,15 @@ int main()
 	horizontal10 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	horizontal11 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 	horizontal12 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+	horizontal13 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
 
 	// GTK SIZE GROUP
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label_path);
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label_algorithm);
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label_index);
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label_source);
-	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label1);
+	//gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), label1);
+	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup1), textview);
 
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup2), cb_skip_hidden);
 	gtk_size_group_add_widget(GTK_SIZE_GROUP(sizegroup2), cb_full);
@@ -145,21 +148,23 @@ int main()
 	gtk_box_pack_start(GTK_BOX(horizontal3), button_index, TRUE, TRUE,30);
 	gtk_box_pack_start(GTK_BOX(horizontal4), label_source, TRUE, TRUE,30);
 	gtk_box_pack_start(GTK_BOX(horizontal4), button_source, TRUE, TRUE,30);
-	gtk_box_pack_start(GTK_BOX(horizontal5), cb_skip_hidden, TRUE, FALSE,0);
-	gtk_box_pack_start(GTK_BOX(horizontal6), cb_full, TRUE, FALSE,0);
-	gtk_box_pack_start(GTK_BOX(horizontal7), cb_yes, TRUE, FALSE,0);
-	gtk_box_pack_start(GTK_BOX(horizontal8), cb_stats, TRUE, FALSE,0);
-	gtk_box_pack_start(GTK_BOX(horizontal9), label1, TRUE, TRUE,0);
-	gtk_box_pack_start(GTK_BOX(horizontal9), textview, TRUE, TRUE,30);
-	gtk_box_pack_start(GTK_BOX(horizontal9), startba, TRUE, TRUE,30);
-	gtk_box_pack_start(GTK_BOX(horizontal10), label2, TRUE, TRUE,30);
-	gtk_box_pack_start(GTK_BOX(horizontal11), spinner, TRUE, TRUE,0);
+	gtk_box_pack_start(GTK_BOX(horizontal5), space, TRUE, TRUE,30);
+	gtk_box_pack_start(GTK_BOX(horizontal6), cb_skip_hidden, TRUE, FALSE,0);
+	gtk_box_pack_start(GTK_BOX(horizontal7), cb_full, TRUE, FALSE,0);
+	gtk_box_pack_start(GTK_BOX(horizontal8), cb_yes, TRUE, FALSE,0);
+	gtk_box_pack_start(GTK_BOX(horizontal9), cb_stats, TRUE, FALSE,0);
+	gtk_box_pack_start(GTK_BOX(horizontal10), space, TRUE, FALSE,0);
+	//gtk_box_pack_start(GTK_BOX(horizontal9), label1, TRUE, TRUE,0);
+	gtk_box_pack_start(GTK_BOX(horizontal11), textview, TRUE, TRUE,30);
+	gtk_box_pack_start(GTK_BOX(horizontal11), startba, TRUE, TRUE,30);
+	gtk_box_pack_start(GTK_BOX(horizontal12), label2, TRUE, TRUE,30);
+	gtk_box_pack_start(GTK_BOX(horizontal13), spinner, TRUE, TRUE,0);
 	
-	//sprintf(command_version, "~/incremental-backup/bin/incremental-backup -V");
-	//version = popen(command_version, "w");
-	//fgets(data_version, DATA_SIZE, version);
-	//fprintf(stdout, "%s\n", version);
-	//pclose(version);
+	sprintf(command_version, "~/incremental-backup/bin/incremental-backup -V");
+	version = popen(command_version, "w");
+	fgets(data_version, DATA_SIZE, version);
+	fprintf(stdout, "%s\n", version);
+	pclose(version);
 
 	// GTK HEADER BAR
 	gtk_header_bar_set_show_close_button(GTK_HEADER_BAR(header_bar), TRUE);
@@ -173,6 +178,14 @@ int main()
 
 	//GTK TEXT VIEW
 	gtk_text_buffer_set_text(textbuffer, "", -1);
+	gtk_text_view_set_pixels_above_lines(GTK_TEXT_VIEW(textview), 0);
+	gtk_text_view_set_pixels_below_lines(GTK_TEXT_VIEW(textview), 0);
+
+	// GTK LABEL
+	gtk_widget_set_halign(label_path, GTK_ALIGN_START);
+	gtk_widget_set_halign(label_algorithm, GTK_ALIGN_START);
+	gtk_widget_set_halign(label_index, GTK_ALIGN_START);
+	gtk_widget_set_halign(label_source, GTK_ALIGN_START);
 
 	gtk_container_add (GTK_CONTAINER (window), scrolled_window);
 	gtk_container_add (GTK_CONTAINER (scrolled_window), vertical);
@@ -187,6 +200,8 @@ int main()
 	gtk_container_add (GTK_CONTAINER (vertical), horizontal9);
 	gtk_container_add (GTK_CONTAINER (vertical), horizontal10);
 	gtk_container_add (GTK_CONTAINER (vertical), horizontal11);
+	gtk_container_add (GTK_CONTAINER (vertical), horizontal12);
+	gtk_container_add (GTK_CONTAINER (vertical), horizontal13);
 	
 	gtk_container_set_border_width(GTK_CONTAINER(vertical),15);
 
